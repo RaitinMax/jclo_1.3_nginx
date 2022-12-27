@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.netology.springbootdemo4.enums.Authorities;
+import ru.netology.springbootdemo4.exceptions.InvalidCredentials;
 import ru.netology.springbootdemo4.exceptions.UnauthorizedUser;
 import ru.netology.springbootdemo4.service.AuthorizationService;
 
@@ -14,17 +15,27 @@ import java.util.List;
 
 @RestController
 public class AuthorizationController {
-    AuthorizationService service;
+    private final AuthorizationService service;
+
+    public AuthorizationController(AuthorizationService service) {
+        this.service = service;
+    }
 
     @GetMapping("/authorize")
-    public List<Authorities> getAuthorities(@RequestParam("user") String user, @RequestParam("password") String password) {
-        return service.getAuthorities(user, password);
+    private final List<Authorities> getAuthorities(@RequestParam("user") String user, @RequestParam("password") String password) {
+        return service.getAuthorities(
+                user, password);
     }
 
     @ExceptionHandler(UnauthorizedUser.class)
-    public ResponseEntity<String> unauthorizedUser(UnauthorizedUser unauthorizedUser) {
+    private final ResponseEntity<String> unauthorizedUser(UnauthorizedUser unauthorizedUser) {
         System.out.println(unauthorizedUser.getMessage());
         return new ResponseEntity<>(unauthorizedUser.getMessage(), HttpStatus.UNAUTHORIZED);
+    }
+    @ExceptionHandler(InvalidCredentials.class)
+    private final ResponseEntity<String> unauthorizedUser(InvalidCredentials unauthorizedUser) {
+        System.out.println(unauthorizedUser.getMessage());
+        return new ResponseEntity<>(unauthorizedUser.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
 }

@@ -1,7 +1,6 @@
 package ru.netology.springbootdemo4.repository;
 
 import org.springframework.stereotype.Repository;
-import ru.netology.springbootdemo4.domain.User;
 import ru.netology.springbootdemo4.enums.Authorities;
 
 import java.util.*;
@@ -9,7 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Repository
 public class UserRepository {
-    private ConcurrentHashMap<ConcurrentHashMap<String, String>, List<Authorities>> userRepo;
+    private final ConcurrentHashMap<ConcurrentHashMap<String, String>, List<Authorities>> userRepo;
 
     public UserRepository() {
         this.userRepo = new ConcurrentHashMap<>();
